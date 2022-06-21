@@ -1,3 +1,3 @@
-[Home](https://github.com/jhonatanjunio/opentwitch/wiki)
-[Database](https://github.com/jhonatanjunio/opentwitch/wiki/Database)
-[Tests](https://github.com/jhonatanjunio/opentwitch/wiki/Tests)
+[Home](https://github.com/jhonatanjunio/opentwitch/wiki)<br/>
+[Database](https://github.com/jhonatanjunio/opentwitch/wiki/Database)<br/>
+[Tests](https://github.com/jhonatanjunio/opentwitch/wiki/Tests)<br/>
