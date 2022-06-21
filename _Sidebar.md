@@ -1,1 +1,1 @@
-Database
+[Database](https://github.com/jhonatanjunio/opentwitch/wiki/Database)
