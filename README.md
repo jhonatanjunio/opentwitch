@@ -59,7 +59,7 @@ It is an NodeJS application developed [live at twitch](https://twitch.tv/oninjad
 
 ## Installation
 
-[Step by step here](INSTALL.md)<br/>
+[Step by step here](INSTALL_EN.md)<br/>
 After install, I strongly recommend you to add the `src/jsons` folder to your `.gitignore` because most of its files are used to store sensitive information.
 
 ## Resources
