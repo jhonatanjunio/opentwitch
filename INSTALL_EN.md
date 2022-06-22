@@ -1,4 +1,4 @@
-# 🇧🇷 Installation
+# 🇺🇸 Installation
 
 ## Initial Settings
 
@@ -26,7 +26,7 @@ Migrate the model tables to the database (there are two ways to do this)
 
 ```bash
 npx prisma db push
-#OU
+# OR
 npx prisma migrate dev --name="migration name"
 ```
 
