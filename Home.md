@@ -7,7 +7,7 @@ Nesta wiki você entenderá a estrutura do projeto, para que, caso opte por cola
 ### Integração com o chat da Twitch
 Com esse recurso, podemos integrar o bate-papo do seu canal da Twitch com nosso aplicativo para ler **comandos** e **resgates de recompensas** na loja da stream. A biblioteca escolhida foi a [Twurple](twurple.js.org/), que foi confusa de entender à primeira vista, mas funciona bem.
 ### Integração Spotify
-Esta é a cereja do bolo. Com esse recurso, seus espectadores podem adicionar músicas ao dispositivo Spotify fornecido em que você está ouvindo músicas. Os espectadores também podem votar para manter ou pular a música atual. Basicamente, você está passando o controle da playlist de músicas da transmissão ao vivo para o seu público. Fantástica né não?
+Esta é a cereja do bolo. Com esse recurso, seus espectadores podem adicionar músicas ao dispositivo Spotify fornecido em que você está ouvindo músicas. Os espectadores também podem votar para manter ou pular a música atual. Basicamente, você está passando o controle da playlist de músicas da transmissão ao vivo para o seu público. Fantástico né não?
 ### Testes via CLI
 Você pode testar sua integração diretamente no seu console, simplesmente rodando o comando `test run`+ modulo que gostaria de testar com seus devidos parâmetros. Pra isso é necessário usar algum package manager do NodeJs. Eu particularmente uso o [Yarn](https://yarnpkg.com/), então o comando será `yarn test run song-list 1`, para listar as músicas na playlist atual no ponto de vista do usuário de ID 1. Veja os testes possíveis [neste link](https://github.com/jhonatanjunio/opentwitch/wiki/Tests)
 <br/>
