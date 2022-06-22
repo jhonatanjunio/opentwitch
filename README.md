@@ -9,7 +9,7 @@ A OpenTwitch é uma aplicação NodeJS desenvolvida [ao vivo na twitch](https://
 ## Dependências
 
 :warning: [Node](https://nodejs.org/en/download/)<br/>
-:warning: [Twitch Developers App](https://dev.twitch.tv/console))<br/>
+:warning: [Twitch Developers App](https://dev.twitch.tv/console)<br/>
 :warning: [Spotify Premium Account](https://www.spotify.com/us/premium/)<br/>
 :warning: [Spotify Developers App](https://developer.spotify.com/dashboard/applications)<br/>
 
@@ -53,7 +53,7 @@ It is an NodeJS application developed [live at twitch](https://twitch.tv/oninjad
 ## Dependencies
 
 :warning: [Node](https://nodejs.org/en/download/)<br/>
-:warning: [Twitch Developers App](https://dev.twitch.tv/console))<br/>
+:warning: [Twitch Developers App](https://dev.twitch.tv/console)<br/>
 :warning: [Spotify Premium Account](https://www.spotify.com/us/premium/)<br/>
 :warning: [Spotify Developers App](https://developer.spotify.com/dashboard/applications)<br/>
 
