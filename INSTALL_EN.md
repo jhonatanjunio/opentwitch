@@ -1,16 +1,36 @@
 # 🇧🇷 Installation
 
-**IMPORTANT**: You must have a Spotify Premium account. If you are not a premium user, you'll get this API return:<br/>
+## Initial Settings
 
-```json
-{
-  "error": {
-    "status": 403,
-    "message": "Player command failed: Premium required",
-    "reason": "PREMIUM_REQUIRED"
-  }
-}
+First of all, run the following command to install all dependencies.
+
+```bash
+yarn
+# OR
+npm i
 ```
+
+After renaming the `.env.example` file to just `.env`, change (initially) the variable referring to the database. The other variables will be changed throughout this guide.
+
+```env
+DATABASE_URL="mysql://{DATABASE USER}:{DATABASE PASSWORD}@{DATABASE ADDRESS}/{DATABASE NAME}"
+```
+
+Initialize the database with the following command:
+
+```bash
+npx prisma init
+```
+
+Migrate the model tables to the database (there are two ways to do this)
+
+```bash
+npx prisma db push
+#OU
+npx prisma migrate dev --name="migration name"
+```
+
+Initial settings done! Now for the integrations.
 
 ## Integrating with Twitch chat
 
@@ -89,6 +109,18 @@ You must adapt the result of the JSON files to the corresponding files. The file
 Done! The bot is already working in your chat. Test by opening your chat and running the command `!playsound wow`
 
 ## Integrating with Spotify
+
+**IMPORTANT**: You must have a Spotify Premium account. If you are not a premium user, you'll get this API return:<br/>
+
+```json
+{
+  "error": {
+    "status": 403,
+    "message": "Player command failed: Premium required",
+    "reason": "PREMIUM_REQUIRED"
+  }
+}
+```
 
 Create or login with your **Spotify for Developers** account at [https://developer.spotify.com/dashboard](https://developer.spotify.com/dashboard) and then click `CREATE AN APP`. Fill in all the fields and after creating the APP, copy the `CLIENT ID`, click on `SHOW CLIENT SECRET` and then copy the Client Secret. Paste this information into your .env file located at the root of the project. You also need to click `EDIT SETTINGS` to set the `REDIRECT URI` to our localhost. Put: `http://localhost:3003/spotify/callback`
 
