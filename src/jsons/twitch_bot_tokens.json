@@ -1,0 +1,11 @@
+{
+    "accessToken": "",
+    "refreshToken": "",
+    "scope": [
+        "channel:read:redemptions",
+        "chat:edit",
+        "chat:read"
+    ],
+    "expiresIn": 0,
+    "obtainmentTimestamp": 0
+}

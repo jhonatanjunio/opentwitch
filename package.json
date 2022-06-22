@@ -1,0 +1,53 @@
+{
+    "name": "opentwitch",
+    "version": "1.0.0",
+    "description": "Do you wanna improve your Twitch chat interactivity? Hold my beer. ",
+    "main": "src/index",
+    "typings": "src/index",
+    "scripts": {
+        "test": "ts-node src/tests/index.test.ts",
+        "dev": "ts-node-dev src/."
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/jhonatanjunio/opentwitch.git"
+    },
+    "keywords": [
+        "Twitch",
+        "Spotify",
+        "chat",
+        "bot"
+    ],
+    "author": "Jhonatan 'oNinjaDev' Junio",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/jhonatanjunio/opentwitch/issues"
+    },
+    "homepage": "https://github.com/jhonatanjunio/opentwitch#readme",
+    "dependencies": {
+        "@prisma/client": "^3.14.0",
+        "@twurple/api": "^5.1.6",
+        "@twurple/auth": "^5.1.6",
+        "@twurple/chat": "^5.1.6",
+        "@twurple/pubsub": "^5.1.6",
+        "axios": "^0.27.2",
+        "commander": "^9.3.0",
+        "cors": "^2.8.5",
+        "dotenv": "^16.0.0",
+        "express": "^4.18.1",
+        "moment": "^2.29.3",
+        "moment-timezone": "^0.5.34",
+        "open": "^8.4.0",
+        "sound-play": "^1.1.0",
+        "spotify-web-api-node": "^5.0.2"
+    },
+    "devDependencies": {
+        "@types/cors": "^2.8.12",
+        "@types/express": "^4.17.13",
+        "@types/node": "^18.0.0",
+        "prisma": "^3.14.0",
+        "ts-node": "^10.7.0",
+        "ts-node-dev": "^2.0.0",
+        "typescript": "^4.6.4"
+    }
+}
