@@ -4,6 +4,9 @@ const prisma = new PrismaClient()
 const moment = require('moment-timezone');
 import { promises as fs } from 'fs';
 
+/**
+ * Function called when the livestream starts (required function)
+ */
 export async function onLiveStart(){
     //Create livePlaylist start entry
     const checkLiveStartedToday = await prisma.livePlaylist.count({

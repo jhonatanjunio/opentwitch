@@ -4,6 +4,15 @@ import { onSongList } from './onSongList';
 const prisma = new PrismaClient()
 const moment = require('moment-timezone');
 
+/**
+ * Function to calculate skip and keep votes
+ * 
+ * @param {number}      userId          ID of the user who requested the song
+ * @param {string}      username        Username of the user who requested the song
+ * @param {string}      vote            Vote to be calculated. Can be keep or skip
+ * 
+ * @returns {Promise<any>}
+ */
 export async function onVoteSkip(userId: number, username: string, vote: string): Promise<any> {
 
     const response = {

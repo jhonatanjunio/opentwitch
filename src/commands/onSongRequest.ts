@@ -3,10 +3,21 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 const moment = require('moment-timezone');
 
+/**
+ * Function called when user requests to add a song to Spotify Queue
+ * 
+ * @param {number}      userId          ID of the user who requested the song
+ * @param {string}      username        Username of the user who requested the song
+ * @param {string}      trackId         ID of the song requested
+ * @param {string}      origin          Origin of the song request 
+ * 
+ * @returns {Promise<any>}
+ */
 export async function onSongRequest(userId: number, username: string, trackId: string, origin: string): Promise<any> {
 
     const response = {
         message: "",
+        errorMsg: "",
     };
 
     if (!trackId) {
@@ -25,6 +36,8 @@ export async function onSongRequest(userId: number, username: string, trackId: s
             modifiableTrackId = extractSpotifyUrl(trackId);
         } else {
             response.message = `${username}, formatos de link aceitos: https://open.spotify.com/track/6EThJr4Dq1Y93JspecGU2F?si=8e891f350a114472 ou spotify:track:6EThJr4Dq1Y93JspecGU2F`;
+            response.errorMsg = "refuse_redemption";
+
             return response;
         }
 
@@ -35,7 +48,9 @@ export async function onSongRequest(userId: number, username: string, trackId: s
             console.log("🔂 Recalling onSongRequest() function after receiving a new Spotify token ...");
             return await onSongRequest(userId, username, trackId, origin);
         } else if (musicName == "") {
-            response.message = `${username}, não consegui encontrar a música que você solicitou. Verifique o link e tente novamente!`;            
+            response.message = `${username}, não consegui encontrar a música que você solicitou. Verifique o link e tente novamente!`;
+            response.errorMsg = "refuse_redemption"
+
             return response;
         }
 
@@ -64,9 +79,6 @@ export async function onSongRequest(userId: number, username: string, trackId: s
 
             console.log(`🎵 ${username} pediu a música "${musicName}"`);
         }
-
-        //TODO caso o pedido via loja falhe, devolver os pontos
-        //TODO: Adicionar a musica pedida na playlist designada        
 
         await addToQueue(modifiableTrackId).then(data => {
             response.message = `${username} adicionou a música "${musicName}" na fila!`;

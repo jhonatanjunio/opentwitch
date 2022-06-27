@@ -1,6 +1,14 @@
 import { PrismaClient, User } from '@prisma/client'
 const prisma = new PrismaClient()
 
+/**
+ * Function called when user requests to add a song to Spotify Queue
+ * 
+ * @param {string}      username        Username of the user who requested the song
+ * @param {string}      isSubscriber    Whether the user is a subscriber or not
+ * 
+ * @returns {Promise<User>}
+ */
 export async function getProfile(username: string, isSubscriber: string = "false"): Promise<User> {
 
     const findUserByUserName = await prisma.user.findMany({

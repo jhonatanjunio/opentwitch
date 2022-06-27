@@ -2,6 +2,15 @@ import { availableSounds } from "../helpers/constants";
 const soundplayer = require("sound-play");
 const path = require("path");
 
+/**
+ * Function to play a sound. See the sound files in the ./src/sounds folder
+ * 
+ * @param {number}      userId          ID of the user who requested the song
+ * @param {string}      username        Username of the user who requested the song
+ * @param {string}      sound           Sound to be played 
+ * 
+ * @returns {Promise<any>}
+ */
 export async function onSoundRequest(userId: number, username: string, sound: string){
     
     const response = {

@@ -3,6 +3,11 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 import { promises as fs } from 'fs';
 
+/**
+ * Function called when user wants to know the current song playing on Spotify
+ * 
+ * @returns {Promise<any>}
+ */
 export async function getCurrentPlayingSong(): Promise<any> {
 
     const response = {

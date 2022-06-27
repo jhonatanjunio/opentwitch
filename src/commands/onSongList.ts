@@ -4,7 +4,13 @@ const prisma = new PrismaClient()
 import { promises as fs } from 'fs';
 const moment = require('moment-timezone');
 
-export const aliases = ["songlist", "sl"];
+/**
+ * Function used to show current playing track and the next 3 tracks in queue
+ * 
+ * @param {number}      userId          ID of the user who requested the song 
+ * 
+ * @returns {Promise<any>}
+ */
 export async function onSongList(userId: number): Promise<any> {
 
     const response = {
@@ -40,7 +46,7 @@ export async function onSongList(userId: number): Promise<any> {
 
         if (!currentlyPlayingTrack[0] || !currentlyPlayingTrack[0].id) {
             response.message = `🤔 A música que está tocando agora não está na playlist! Peça uma música usando !songrequest`;
-            return response;            
+            return response;
         }
 
         const currentTrack = currentlyPlayingTrack[0];
