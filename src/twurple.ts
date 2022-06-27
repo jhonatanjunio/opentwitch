@@ -6,12 +6,7 @@ import { RefreshingAuthProvider } from '@twurple/auth';
 import { promises as fs } from 'fs';
 import { PrismaClient } from '@prisma/client'
 import { TwitchPrivateMessage } from "@twurple/chat/lib/commands/TwitchPrivateMessage";
-import { addToQueue, getMusicName, extractSpotifyUrl, currentPlayingTrackId, refreshToken, skipTrack } from "./interfaces/Spotify";
-import { availableSocials, availableSounds } from "./helpers/constants";
-const soundplayer = require("sound-play");
-const path = require("path");
-const moment = require('moment-timezone');
-import { callCommand, commandsRouter } from "./commands/commandsRouter";
+import { callCommand } from "./commands/commandsRouter";
 import { ApiClient } from "@twurple/api";
 import { onSongRequest } from "./commands/onSongRequest";
 import { getProfile } from "./commands/getProfile";
