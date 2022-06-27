@@ -42,7 +42,7 @@ IMPORTANTE: caso vá utilizar a sua conta para responder aos comandos, o process
 - Dê o nome que você quiser (deve ser único na plataforma, então seja criativo) para o seu aplicativo. No campo "URLS de redirecionamento OAuth", digite http://localhost:3003 e em Categoria, escolha Chat Bot e então clique em Criar.
 - Seu aplicativo agora vai estar na lista de aplicativos. Clique no botão Gerenciar. Na tela que exibe as informações do seu aplicativo, clique em "Novo segredo". Agora você precisa copiar o ID do cliente e o Segredo do cliente.
 
-Agora você precisa gerar o "code" necessário para que nossa aplicação funcione. Para isto, acesse o link: `https://id.twitch.tv/oauth2/authorize?response_type=code&client_id={COLOQUE O CLIENT ID COPIADO ANTERIOMENTE AQUI}&redirect_uri=http://localhost:3003&scope=chat:read+chat:edit+channel:read:redemptions&token_type=bearer`<br/>
+Agora você precisa gerar o "code" necessário para que nossa aplicação funcione. Para isto, acesse o link: `https://id.twitch.tv/oauth2/authorize?response_type=code&client_id={COLOQUE O CLIENT ID COPIADO ANTERIOMENTE AQUI}&redirect_uri=http://localhost:3003&scope=chat:read+chat:edit+channel:read:redemptions+channel:manage:redemptions&token_type=bearer`<br/>
 O retorno será "your code is: {seu code}".
 <br/><br/>
 
@@ -83,6 +83,7 @@ O retorno desta chamada **deve** ser algo como:
     "expires_in": 13477,
     "refresh_token": "refresh token gerado",
     "scope": [
+        "channel:manage:redemptions",
         "channel:read:redemptions",
         "chat:edit",
         "chat:read"
@@ -98,6 +99,7 @@ Você deve adaptar o resultado aos arquivos JSON aos arquivos correspondentes. O
     "accessToken": "cole aqui a access token gerada",
     "refreshToken": "cole aqui a refresh token gerada",
     "scope": [
+        "channel:manage:redemptions",
         "channel:read:redemptions",
         "chat:edit",
         "chat:read"
@@ -107,7 +109,30 @@ Você deve adaptar o resultado aos arquivos JSON aos arquivos correspondentes. O
 }
 ```
 
-Pronto! O bot já está funcionando no seu chat. Teste abrindo seu chat e rodando o comando `!playsound wow`
+### Passo opcional: compra de itens via loja da stream
+
+Caso você queira utilizar a loja de pontos da Twitch para ler as compras do usuário e efetivar/devolver os pontos gastos, você precisa criar essas recompensas via API. Se tentar mudar o status da "compra de item" para "COMPLETADO" ou "RECUSADO" de um item que foi criado direto do dashboard, a ação não será completada, causando um erro de origem de crição do item (os CLIENT_ID são diferentes dashboard/API). Para criar um item via API, insira dentro da função `TwIntegration.pubSub` para ser executado uma única vez (apague o trecho a seguir após executá-lo e ver a recompensa criada na dashboard) o seguinte trecho de código:
+
+```javascript
+// .. código já existente
+const apiClient = new ApiClient({ authProvider: authProvider });
+this.apiClient = apiClient;
+// .. fim de código já existente, linhas inseridas a seguir:
+apiClient.channelPoints.createCustomReward(userId, {
+    title: "Recompensa teste",
+    cost: 1,
+    prompt: "Descrição da recompensa (200 caracteres max)",
+    isEnabled: true,                
+});
+
+// Parâmetros possíveis na criação de nova recompensa:  https://twurple.js.org/reference/api/interfaces/HelixCreateCustomRewardData.html
+```
+
+Feito isso, adicione no seu arquivo `.env` as variáveis de ambiente que contém o ID da recompensa criada e adicione na função `TwIntegration.onRedemptionMessage` um teste `if` para ler quando algum usuário comprar o item que você criou. Estes passos são obrigatórios caso vá utilizar a compra de itens via loja da stream. Para recuperar o ID da recompensa, acesse o site: `https://www.instafluff.tv/TwitchCustomRewardID/?channel={SEU CANAL AQUI}`, abra seu chat e faça a compra do item que gostaria de saber o ID da recompensa e veja o resultado neste site.
+
+### Finalizada a integração com a Twitch
+
+Pronto! O bot já está funcionando no seu chat. Com seu serviço rodando (`yarn dev`), teste abrindo seu chat e rodando o comando `!playsound wow`
 
 ## Integrando com o Spotify
 

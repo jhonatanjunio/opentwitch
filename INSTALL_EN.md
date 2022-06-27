@@ -42,7 +42,7 @@ It is recommended that you create an account for your Bot. You can use your main
 - Give your app whatever name you want (must be unique across the platform, so be creative) In the "OAuth redirect URL" field, type http://localhost:3003 and under Category, choose Chat Bot and then click Create.
 - Your app will now be in the apps list. Click on the Manage button. On the screen that displays your app's information, click "New Secret". Now you need to copy the Client ID and Client Secret.
 
-Now you need to generate the "code" necessary for our application to work. For this, access the link: `https://id.twitch.tv/oauth2/authorize?response_type=code&client_id={PUT THE CLIENT ID COPIED PREVIOUSLY HERE}&redirect_uri=http://localhost:3003&scope=chat:read+chat:edit+channel:read:redemptions&token_type=bearer`<br/>
+Now you need to generate the "code" necessary for our application to work. For this, access the link: `https://id.twitch.tv/oauth2/authorize?response_type=code&client_id={PUT THE CLIENT ID COPIED PREVIOUSLY HERE}&redirect_uri=http://localhost:3003&scope=chat:read+chat:edit+channel:read:redemptions+channel:manage:redemptions&token_type=bearer`<br/>
 The return will be "your code is: {your code}".
 <br/><br/>
 
@@ -82,6 +82,7 @@ The return of this call **should** be something like:
     "expires_in": 13477,
     "refresh_token": "generated refresh token",
     "scope": [
+        "channel:manage:redemptions",
         "channel:read:redemptions",
         "chat:edit",
         "chat:read"
@@ -97,6 +98,7 @@ You must adapt the result of the JSON files to the corresponding files. The file
     "accessToken": "paste the generated access token here",
     "refreshToken": "paste the generated refresh token here",
     "scope": [
+        "channel:manage:redemptions",
         "channel:read:redemptions",
         "chat:edit",
         "chat:read"
@@ -106,7 +108,30 @@ You must adapt the result of the JSON files to the corresponding files. The file
 }
 ```
 
-Done! The bot is already working in your chat. Test by opening your chat and running the command `!playsound wow`
+### Optional step: purchase items via the stream store
+
+If you want to use the Twitch points store to read user purchases and complete/refuse the user's claims, you need to create these rewards via API. If you try to change the "item purchase" status to "FULFILLED" or "CANCELED" of an item that was created directly from the dashboard, the action will not be completed, causing an item creation source error (the CLIENT_IDs are different from the dashboard /API). To create an item via API, insert the following code snippet into the `TwIntegration.pubSub` function to be executed once (delete the following snippet after executing it and seeing the reward created on the dashboard):
+
+```javascript
+// .. already existing code
+const apiClient = new ApiClient({ authProvider: authProvider });
+this.apiClient = apiClient;
+// .. end of existing code, lines inserted below:
+apiClient.channelPoints.createCustomReward(userId, {
+    title: "Test Reward",
+    cost: 1,
+    prompt: "Description of reward (200 characters max)",
+    isEnabled: true,
+});
+
+// Possible parameters in creating new reward: https://twurple.js.org/reference/api/interfaces/HelixCreateCustomRewardData.html
+```
+
+Once this is done, add in your `.env` file the environment variables that contain the ID of the created reward and add in the `TwIntegration.onRedemptionMessage` function an `if` test to read when a user buys the item you created. These steps are mandatory if you are going to use the purchase of items via the stream store. To retrieve the reward ID, access the website: `https://www.instafluff.tv/TwitchCustomRewardID/?channel={YOUR CHANNEL HERE}`, open your chat and make the purchase of the item you would like to know the ID of reward and see the result on this site.
+
+### Completed the integration with Twitch
+
+Ready! The bot is already working in your chat. With your service running (`yarn dev`), test by opening your chat and running the command `!playsound wow`
 
 ## Integrating with Spotify
 

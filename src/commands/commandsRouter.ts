@@ -31,5 +31,21 @@ export const commandsRouter = [
         aliases: ["votekeep", "voteno", "vn", "vk"],
         permissions: ["user", "mod", "admin"],
     },
+    {
+        name: "!playsound",
+        description: "Toque um som na live! Mande esse comando desta forma para saber os sons disponíveis.",
+        file: "onVoteSkip",
+        params: ["userId", "username", "vote"],
+        aliases: ["votekeep", "voteno", "vn", "vk"],
+        permissions: ["user", "mod", "admin"],
+    },
+    {
+        name: "!socials",
+        description: "Saiba as redes sociais do streamer",
+        file: null,
+        params: [],
+        aliases:[],
+        permissions: ["user", "mod", "admin"],
+    },
     
 ];

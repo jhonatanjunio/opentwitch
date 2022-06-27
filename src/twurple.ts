@@ -184,19 +184,24 @@ export class TwIntegration {
                         chatClient.say(channel, `${user}, links sociais: ${availableSocials.map(s => `${s.name}`).join(" | ")}`);
                         break;
                     case "linkedin":
-                        chatClient.say(channel, `${user}, meu LinkedIn → https://linkedin.com/in/jhonatanjunio .`);
+                        const linkedin = availableSocials.filter(s => s.name == "!linkedin")[0];
+                        chatClient.say(channel, `${user}, ${linkedin.description}`);
                         break;
                     case "github":
-                        chatClient.say(channel, `${user}, meu GitHub → https://github.com/jhonatanjunio . Aproveita e me dá sponsor! ♥`);
+                        const github = availableSocials.filter(s => s.name == "!github")[0];
+                        chatClient.say(channel, `${user}, ${github.description}`);                        
                         break;
                     case "discord":
-                        chatClient.say(channel, `${user}, Discord da nossa comunidade → https://discord.gg/GNFbRmu`);
+                        const discord = availableSocials.filter(s => s.name == "!discord")[0];
+                        chatClient.say(channel, `${user}, ${discord.description}`);
                         break;
                     case "twitter":
-                        chatClient.say(channel, `${user}, segue ae → https://twitter.com/jhonotom`);
+                        const twitter = availableSocials.filter(s => s.name == "!twitter")[0];
+                        chatClient.say(channel, `${user}, ${twitter.description}`);
                         break;
                     case "instagram":
-                        chatClient.say(channel, `${user}, minha conta pessoal → https://instagram.com/jhonlucker`);
+                        const instagram = availableSocials.filter(s => s.name == "!instagram")[0];
+                        chatClient.say(channel, `${user}, ${instagram.description}`);
                         break;
 
                     default:
