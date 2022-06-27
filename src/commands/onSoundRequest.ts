@@ -10,7 +10,10 @@ export async function onSoundRequest(userId: number, username: string, sound: st
 
     try {
         if (availableSounds.includes(sound)) {
-            await soundplayer.play(path.join(__dirname, `/sounds/${sound}.mp3`), 1);
+            const filePath = `./src/sounds/${sound}.mp3`;
+            const fileRealPath = path.resolve(filePath);
+
+            await soundplayer.play(fileRealPath, 1);
         } else {
             response.message = `${username}, o som que você pediu não foi encontrado!`;
         }
