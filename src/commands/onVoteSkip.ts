@@ -34,7 +34,7 @@ export async function onVoteSkip(userId: number, username: string, vote: string)
             }
         });
 
-        if (!currentlyPlayingTrack) {
+        if (!currentlyPlayingTrack || currentlyPlayingTrack.length == 0) {
             response.message = `🤔 A música que está tocando não está na playlist! Peça uma música usando !songrequest`;
             return response;
         }
