@@ -146,7 +146,7 @@ async function currentPlayingTrackId(): Promise<string> {
     
     await axios.get(url, { headers: headers })
         .then(async (res: any) => {
-            currentPlayingTrackId = res.data.item.id;
+            currentPlayingTrackId = res.data && res.data.item ? res.data.item.id : "";
         })
         .catch(async (err: any) => {
             console.log("🔂 [Spotify::currentPlayingTrackId()] Gerando uma nova token para tentar novamente ...");
