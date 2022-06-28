@@ -3,26 +3,18 @@ import { currentPlayingTrackId, skipTrack } from '../interfaces/Spotify';
 import { onSongList } from './onSongList';
 const prisma = new PrismaClient()
 const moment = require('moment-timezone');
+import { promises as fs } from 'fs';
 
-/**
- * Function to calculate skip and keep votes
- * 
- * @param {number}      userId          ID of the user who requested the song
- * @param {string}      username        Username of the user who requested the song
- * @param {string}      vote            Vote to be calculated. Can be keep or skip
- * 
- * @returns {Promise<any>}
- */
 export async function onVoteSkip(userId: number, username: string, vote: string): Promise<any> {
 
     const response = {
-        message: "",
+        message: [""],
     };
 
     try {
 
         const getCurrentPlayingTrackId = await currentPlayingTrackId();
-        const maxVotes = Number(String(process.env.SONG_MAX_SKIP_VOTES));
+        const maxVotes = 5;
 
         // check if token is still available
         if (getCurrentPlayingTrackId == "new_token") {
@@ -30,13 +22,18 @@ export async function onVoteSkip(userId: number, username: string, vote: string)
         }
 
         if (!getCurrentPlayingTrackId) {
-            response.message = `🤔 Aparentemente não tem nenhuma música tocando no momento! Peça uma música usando !songrequest`;
+            response.message = [`🤔 Aparentemente não tem nenhuma música tocando no momento! Peça uma música usando !songrequest`];
             return response;
         }
 
+        const liveParams = JSON.parse(await fs.readFile('./src/jsons/live_params.json', 'utf8'));
+
         const currentlyPlayingTrack = await prisma.livePlaylist.findMany({
             where: {
-                track_id: getCurrentPlayingTrackId
+                track_id: getCurrentPlayingTrackId,
+                created_at: {
+                    gte: liveParams.start_date
+                }
             },
             include: {
                 user: true
@@ -44,7 +41,7 @@ export async function onVoteSkip(userId: number, username: string, vote: string)
         });
 
         if (!currentlyPlayingTrack || currentlyPlayingTrack.length == 0) {
-            response.message = `🤔 A música que está tocando não está na playlist! Peça uma música usando !songrequest`;
+            response.message = [`🤔 A música que está tocando não está na playlist! Peça uma música usando !songrequest`];
             return response;
         }
 
@@ -57,11 +54,10 @@ export async function onVoteSkip(userId: number, username: string, vote: string)
         });
 
         if (getUserCurrentSkipCount > 0) {
-            response.message = `@${username}, você já votou! 👍`;
+            response.message = [`@${username}, você já votou! 👍`];
             return response;
         } else {
 
-            // get next tracks in queue
             const nextTracksInQueue = await prisma.livePlaylist.findMany({
                 where: {
                     id: {
@@ -72,19 +68,18 @@ export async function onVoteSkip(userId: number, username: string, vote: string)
                     }
                 },
                 orderBy: {
-                    created_at: "asc"
+                    created_at: "desc"
                 },
                 include: {
                     user: true
                 }
             }).catch(error => {
-                console.log(error.response.data);
+                console.log(error);
                 console.log("❌ Tudo indica que não há músicas na fila após a música atual!");
             });
 
             const nextTrack = nextTracksInQueue ? nextTracksInQueue[0] : null;
 
-            // increment skip count for current user, avoind multiple votes
             await prisma.livePlaylistSkipCount.create({
                 data: {
                     user_id: userId,
@@ -105,23 +100,32 @@ export async function onVoteSkip(userId: number, username: string, vote: string)
                     }
                 });
 
-                // if votes greater or equals skip count, skip track
-                if ((currentlyPlayingTrack[0].skip_count + 1) >= maxVotes) {
-
-                    response.message = `👍 O povo pediu e a música foi pulada!`;
+                
+                if (currentlyPlayingTrack[0].skip_count + 1 == maxVotes && currentlyPlayingTrack[0].votes_ended == false) {
+                    
+                    await prisma.livePlaylist.update({
+                        where: {
+                            id: currentlyPlayingTrack[0].id
+                        },
+                        data: {
+                            votes_ended: true,
+                            updated_at: new Date(moment().tz("America/Sao_Paulo").format("YYYY-MM-DD HH:mm:ss"))
+                        }
+                    });
+                    response.message.push(`👍 O povo pediu e a música foi pulada!`);
 
                     await skipTrack();
 
                     if (nextTrack) {
-                        response.message = `⏩ Próxima música (tocando agora): "${nextTrack.track_name}" adicionada por ${(nextTrack.user ? "@" + nextTrack.user.username : "usuário desconhecido")}`;
+                        response.message.push(`⏩ Próxima música (tocando agora): "${nextTrack.track_name}" adicionada por ${(nextTrack.user ? "@" + nextTrack.user.username : "usuário desconhecido")}`);
                     } else {
-                        response.message = `🤔 Não tem mais músicas na playlist!`;
+                        response.message.push(`🤔 Não tem mais músicas na playlist!`);
                     }
 
                     return response;
 
                 } else {
-                    response.message = `${username}, seu voto foi computado! 👍 Votos para pular a música: ${currentlyPlayingTrack[0].skip_count + 1}/${maxVotes}`;
+                    response.message = [`${username}, seu voto foi computado! 👍 Votos para pular a música: ${currentlyPlayingTrack[0].skip_count + 1}/${maxVotes}`];
                 }
             }
 
@@ -136,24 +140,35 @@ export async function onVoteSkip(userId: number, username: string, vote: string)
                         updated_at: new Date(moment().tz("America/Sao_Paulo").format("YYYY-MM-DD HH:mm:ss"))
                     }
                 });
+                
+                if ((currentlyPlayingTrack[0].keep_count + 1) == maxVotes && currentlyPlayingTrack[0].votes_ended == false) {
+                    
+                    await prisma.livePlaylist.update({
+                        where: {
+                            id: currentlyPlayingTrack[0].id
+                        },
+                        data: {
+                            votes_ended: true
+                        }
+                    });
 
-                if ((currentlyPlayingTrack[0].keep_count + 1) >= maxVotes) {
-
-                    response.message = `👍 O povo pediu e a música foi mantida!`;
-                    onSongList(userId);
+                    response.message.push(`👍 O povo pediu e a música foi mantida!`);
+                    const nextSongsInQueue = await onSongList(userId);
+                    response.message.push(nextSongsInQueue.message);
                     return response;
-
+                } else if ((currentlyPlayingTrack[0].keep_count + 1) > maxVotes || currentlyPlayingTrack[0].votes_ended == true) {
+                    response.message = [`${username}, Votações encerradas! A música foi mantida 👍`];
                 } else {
-                    response.message = `${username}, seu voto foi computado! 👍 Votos para manter a música: ${currentlyPlayingTrack[0].keep_count + 1}/${maxVotes}`;
+
+                    response.message.push(`${username}, seu voto foi computado! 👍 Votos para manter a música: ${currentlyPlayingTrack[0].keep_count + 1}/${maxVotes}`);
                     return response;
                 }
             }
 
         }
 
-        const currentTrack = currentlyPlayingTrack[0];
-
-        response.message = `🎵 Tocando agora: "${currentTrack.track_name}" adicionada por ${(currentTrack.user ? "@" + currentTrack.user.username : "usuário desconhecido")}`;
+        const currentTrack = currentlyPlayingTrack[0];        
+        response.message.push(`🎵 Tocando agora: "${currentTrack.track_name}" adicionada por ${(currentTrack.user ? "@" + currentTrack.user.username : "usuário desconhecido")}`);
         return response;
     } catch (error) {
         console.log(error);

@@ -26,14 +26,15 @@ model User {
 }
 
 model LivePlaylist {
-  id         Int       @id @default(autoincrement())
-  user_id    Int
-  track_id   String    @db.VarChar(191)
-  track_name String    @db.VarChar(191)
-  skip_count Int       @default(0)
-  keep_count Int       @default(0)
-  created_at DateTime? @default(now()) @db.DateTime(0)
-  updated_at DateTime? @updatedAt @db.DateTime(0)
+  id          Int       @id @default(autoincrement())
+  user_id     Int
+  track_id    String    @db.VarChar(191)
+  track_name  String    @db.VarChar(191)
+  skip_count  Int       @default(0)
+  keep_count  Int       @default(0)
+  votes_ended Boolean   @default(false)
+  created_at  DateTime? @default(now()) @db.DateTime(0)
+  updated_at  DateTime? @updatedAt @db.DateTime(0)
 
   user                   User                    @relation(fields: [user_id], references: [id])
   liveplaylistsskipcount LivePlaylistSkipCount[]

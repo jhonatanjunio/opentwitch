@@ -94,7 +94,12 @@ export class TwIntegration {
 
                 await callCommand(command, args, userIsAdmin == "true", getUser.id, user)
                     .then(async (result: any) => {
-                        this.sendChatMessage(result.message);
+                        //test if result.message is array
+                        if (Array.isArray(result.message)) {
+                            for (let i = 0; i < result.message.length; i++) {
+                                await this.sendChatMessage(result.message[i]);
+                            }
+                        } else this.sendChatMessage(result.message);
                     });
 
             });

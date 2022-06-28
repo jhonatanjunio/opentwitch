@@ -2,19 +2,14 @@ import { currentPlayingTrackId } from "../interfaces/Spotify";
 import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 import { promises as fs } from 'fs';
+import { getCurrentPlayingSong } from "./getCurrentPlayingSong";
 const moment = require('moment-timezone');
 
-/**
- * Function used to show current playing track and the next 3 tracks in queue
- * 
- * @param {number}      userId          ID of the user who requested the song 
- * 
- * @returns {Promise<any>}
- */
+export const aliases = ["songlist", "sl"];
 export async function onSongList(userId: number): Promise<any> {
 
     const response = {
-        message: "",
+        message: [""],
     };
 
     try {
@@ -26,7 +21,7 @@ export async function onSongList(userId: number): Promise<any> {
             console.log("🔂 Recalling onSongList() function after receiving a new Spotify token ...");
             return await onSongList(userId);
         } else if (getCurrentPlayingTrackId == "") {
-            response.message = `🤔 Nenhuma música está tocando no momento!`;
+            response.message = [`🤔 Nenhuma música está tocando no momento!`];
             return response;
         }
 
@@ -45,7 +40,7 @@ export async function onSongList(userId: number): Promise<any> {
         });
 
         if (!currentlyPlayingTrack[0] || !currentlyPlayingTrack[0].id) {
-            response.message = `🤔 A música que está tocando agora não está na playlist! Peça uma música usando !songrequest`;
+            response.message = [`🤔 A música que está tocando agora não está na playlist! Peça uma música usando !songrequest`];
             return response;
         }
 
@@ -60,7 +55,7 @@ export async function onSongList(userId: number): Promise<any> {
         });
 
         if (countTracksInQueue == 0) {
-            response.message = `🤔 A playlist está vazia! Peça uma música usando !songrequest`;
+            response.message = [`🤔 A playlist está vazia! Peça uma música usando !songrequest`];
             return response;
         }
 
@@ -94,7 +89,8 @@ export async function onSongList(userId: number): Promise<any> {
         });
 
         const nextTracks = nextTracksInQueue.slice(0, 3);
-        response.message = `🎵 Tocando agora: "${currentTrack.track_name}" adicionada por ${(currentTrack.user ? "@" + currentTrack.user.username : "usuário desconhecido")}`;
+        const currentPlayingSong = await getCurrentPlayingSong();
+
 
         //list next tracks with index
         let nextTracksList = "";
@@ -121,7 +117,10 @@ export async function onSongList(userId: number): Promise<any> {
         //     nextTracksList = nextTracksList + `... sua música está na posição ${userPositionInQueue}. da fila!`;
         // }
 
-        response.message = `. ⏳ Próximas músicas na fila: ${nextTracksList}`;
+        response.message = [
+            currentPlayingSong.message,
+            `. ⏳ Próximas músicas na fila: ${nextTracksList}`
+        ];
 
         return response;
     } catch (error) {
