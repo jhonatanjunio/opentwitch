@@ -54,7 +54,13 @@ export async function onSongList(userId: number): Promise<any> {
             }
         });
 
+        //Tocando agora:
+        const currentPlayingSong = await getCurrentPlayingSong();
+
         if (countTracksInQueue == 0) {
+            if (currentPlayingSong.message && currentPlayingSong.message.startsWith("Tocando agora:")) {
+                response.message.push(currentPlayingSong.message);
+            }
             response.message = [`🤔 A playlist está vazia! Peça uma música usando !songrequest`];
             return response;
         }
@@ -89,7 +95,6 @@ export async function onSongList(userId: number): Promise<any> {
         });
 
         const nextTracks = nextTracksInQueue.slice(0, 3);
-        const currentPlayingSong = await getCurrentPlayingSong();
 
 
         //list next tracks with index

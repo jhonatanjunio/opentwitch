@@ -174,4 +174,70 @@ async function skipTrack() {
     return response.data;
 }
 
-export { refreshToken, generateCodeGrant, generateTokens, extractSpotifyUrl, addToQueue, skipTrack, currentPlayingTrackId, getMusicName }
+async function searchTrack(userId: number, search: string) {
+    const token = await getToken();
+    const url = `https://api.spotify.com/v1/search?q=${encodeURI(search)}&type=track&limit=4`;
+    const headers = {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+    }
+
+    let currentSearch: any = fs.readFile('./src/jsons/sound_search_results.json', 'utf8');
+    currentSearch = JSON.parse(await currentSearch) as Array<any>;
+    let result = "";
+
+    if (currentSearch.filter((search: any) => search.user_id == userId).length > 0) {
+        result = "in_search";
+    } else {
+
+        let foundResults: any = [];
+        let results: any = [];
+
+        await axios.get(url, { headers: headers })
+            .then(async (res: any) => {
+                foundResults = res.data.tracks.items;
+            })
+            .catch(async (err: any) => {
+                console.log("🔂 [Spotify::searchTrack()] Gerando uma nova token para tentar novamente ...");
+                await refreshToken();
+                result = "new_token";
+            });
+
+        if (result == "new_token") return result;
+
+        if (foundResults.length == 0) {
+            result = "no_results";
+            return result;
+        } else {
+
+            let track_id = "";
+            let track_name = "";
+            let result_id = 1;
+            for (const foundResult of foundResults) {
+                track_id = foundResult.id;
+                track_name = `${foundResult.artists[0].name} - ${foundResult.name}`;
+                results.push({
+                    result_id,
+                    track_id,
+                    track_name
+                });
+                result_id++;
+            }
+        }
+
+        const newEntry = {
+            user_id: userId,
+            search_term: search,
+            results
+        }
+
+        currentSearch.push(newEntry);
+
+        await fs.writeFile('./src/jsons/sound_search_results.json', JSON.stringify(currentSearch));
+        return newEntry;
+    }
+
+    return result;
+}
+
+export { refreshToken, generateCodeGrant, generateTokens, extractSpotifyUrl, addToQueue, skipTrack, currentPlayingTrackId, getMusicName, searchTrack }

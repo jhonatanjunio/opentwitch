@@ -1,7 +1,8 @@
-import { addToQueue, extractSpotifyUrl, getMusicName } from "../interfaces/Spotify";
+import { addToQueue, currentPlayingTrackId, extractSpotifyUrl, getMusicName } from "../interfaces/Spotify";
 import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 const moment = require('moment-timezone');
+import { promises as fs } from 'fs';
 
 /**
  * Function called when user requests to add a song to Spotify Queue
@@ -56,8 +57,32 @@ export async function onSongRequest(userId: number, username: string, trackId: s
 
         if (!process.env.TWITCH_REQUEST_SPOTIFY_REWARD_ID) return;
         const rewardId = process.env.TWITCH_REQUEST_SPOTIFY_REWARD_ID;
+        let checkQueueLength = "";
 
         if (origin != "test") {
+
+            const getCurrentPlayingTrackId = await currentPlayingTrackId();
+            const getLivePlaylistId = JSON.parse(await fs.readFile("../server/src/jsons/live_params.json", "utf-8"));
+
+            const currentlyPlayingTrack = await prisma.livePlaylist.findMany({
+                where: {
+                    track_id: getCurrentPlayingTrackId,
+                    id: {
+                        gt: getLivePlaylistId.live_playlist_id,
+                    }
+                },
+                include: {
+                    user: true
+                },
+            });
+
+            const queueLength = await prisma.livePlaylist.count({
+                where: {
+                    id: {
+                        gt: currentlyPlayingTrack ? currentlyPlayingTrack[0].id : 0,
+                    }
+                }
+            });
 
             await prisma.userRedemption.create({
                 data: {
@@ -77,11 +102,12 @@ export async function onSongRequest(userId: number, username: string, trackId: s
                 }
             });
 
+            checkQueueLength = queueLength && queueLength > 0 ? `Posição de execução após a música atual: ${queueLength + 1}.` : "";
             console.log(`🎵 ${username} pediu a música "${musicName}"`);
         }
 
         await addToQueue(modifiableTrackId).then(data => {
-            response.message = `${username} adicionou a música "${musicName}" na fila!`;
+            response.message = `${username} adicionou a música "${musicName}" na fila! ${checkQueueLength}`;
         }).catch(error => {
             response.message = `${username}, erro ao tentar adicionar sua música na fila!`;
         })

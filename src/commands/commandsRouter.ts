@@ -2,10 +2,27 @@ import { availableSocials, availableSounds } from "../helpers/constants";
 import { onLiveStart } from "./onLiveStart";
 import { onSongList } from "./onSongList";
 import { onSongRequest } from "./onSongRequest";
+import { onSongChoose, onSongSearch } from "./onSongSearch";
 import { onSoundRequest } from "./onSoundRequest";
 import { onVoteSkip } from "./onVoteSkip";
 
 export const commandsRouter = [    
+    {
+        name: "!songsearch",
+        description: "Procura uma música no Spotify",
+        file: "onSongSearch",
+        params: ["userId", "username", "search"],
+        aliases: ["songsearch", "search"],
+        permissions: ["user", "mod", "admin"],
+    },
+    {
+        name: "!choosesong",
+        description: "Escolhe uma das opções de resultado da busca",
+        file: "onSongSearch",
+        params: ["userId", "username", "choice"],
+        aliases: ["choosesong", "songchoice", "cs"],
+        permissions: ["user", "mod", "admin"],
+    },
     {
         name: "!songrequest",
         description: "Adicionar uma música à fila",
@@ -67,6 +84,29 @@ export async function callCommand(command: string, params: any, userIsAdmin: boo
     switch (command) {
         
         //Spotify Calls
+        case "songsearch":
+        case "search":
+            if (params.length && userId && username) {
+                response.message = await onSongSearch(userId, username, params.join(' '));
+            } else {
+                response.message = `${username}, você precisa informar o nome da música.`;
+            }
+            break;
+        case "choosesong":
+        case "songchoice":
+        case "cs":
+            if (userId && username && params && params[0]) {
+                //try to parse params[0] as a number
+                let choiceId = parseInt(params[0]);
+                if (isNaN(choiceId)) {
+                    response.message = `${username}, você precisa informar o número da música de sua escolha.`;
+                } else {
+                    response.message = await onSongChoose(userId, username, params[0]);
+                }
+            } else {
+                response.message = `${username}, você precisa informar o número da música de sua escolha.`;
+            }
+            break;
         case "songrequest":
         case "sr":
             if (params.length && userId && username) {
