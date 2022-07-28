@@ -1,5 +1,5 @@
 # 🇧🇷 Testes implementados
-Os testes disponíveis são equivalentes aos arquivos listados na pasta `src/tests/modules`. O nome do comando é exatamente o nome do arquivo! Para executar o teste, você precisa de um Node package manager (exemplos: npm, yarn ...) e ao acessar o seu console digite, por exemplo, `yarn run test song-list 1`.
+Os testes disponíveis são equivalentes aos arquivos listados na pasta `src/tests/modules`. O nome do comando é exatamente o nome do arquivo! Para executar o teste, você precisa de um Node package manager (exemplos: npm, yarn ...) e ao acessar o seu console digite, por exemplo, `yarn test run song-list 1`.
 
 ## add-song
 ### Descrição
