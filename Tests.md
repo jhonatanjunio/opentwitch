@@ -15,7 +15,7 @@ Teste para listar as próximas músicas na fila. Atualmente não lista a música
 `userId`: ID do usuário que é utilizado para futuras implementações, como 'posição da próxima musica solicitada pelo usuário que chamou este comando'. <br/>
 
 # 🇺🇸 Implemented tests
-The tests available are equivalent to the files listed in the `src/tests/modules` folder. The command name is exactly the file name! To run the test, you need a Node package manager (examples: npm, yarn...) and when accessing your console type, for example, `yarn run test song-list 1`.
+The tests available are equivalent to the files listed in the `src/tests/modules` folder. The command name is exactly the file name! To run the test, you need a Node package manager (examples: npm, yarn...) and when accessing your console type, for example, `yarn test run song-list 1`.
 
 ## add-song
 ### Description
