@@ -1,0 +1,67 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            Int              @id @default(autoincrement())
+  username      String           @db.VarChar(191)
+  is_admin      String           @default("false") @db.VarChar(5)
+  is_subscriber String           @default("false") @db.VarChar(5)
+  created_at    DateTime?        @default(now()) @db.DateTime(0)
+  updated_at    DateTime?        @updatedAt @db.DateTime(0)
+  redemptions   UserRedemption[]
+  liveplaylists LivePlaylist[]
+
+  LivePlaylistSkipCount LivePlaylistSkipCount[]
+  @@unique([username])
+  @@map("users")
+}
+
+model LivePlaylist {
+  id          Int       @id @default(autoincrement())
+  user_id     Int
+  track_id    String    @db.VarChar(191)
+  track_name  String    @db.VarChar(191)
+  skip_count  Int       @default(0)
+  keep_count  Int       @default(0)
+  votes_ended Boolean   @default(false)
+  created_at  DateTime? @default(now()) @db.DateTime(0)
+  updated_at  DateTime? @updatedAt @db.DateTime(0)
+
+  user                   User                    @relation(fields: [user_id], references: [id])
+  liveplaylistsskipcount LivePlaylistSkipCount[]
+  @@map("live_playlists")
+}
+
+model LivePlaylistSkipCount {
+  id                Int       @id @default(autoincrement())
+  user_id           Int
+  live_playlists_id Int
+  created_at        DateTime? @default(now()) @db.DateTime(0)
+  updated_at        DateTime? @updatedAt @db.DateTime(0)
+
+  user          User         @relation(fields: [user_id], references: [id])
+  liveplaylists LivePlaylist @relation(fields: [live_playlists_id], references: [id])
+  @@map("live_playlist_skip_counts")
+}
+
+model UserRedemption {
+  id            Int       @id @default(autoincrement())
+  redemption_id String?   @db.VarChar(191)
+  user_id       Int
+  reward_id     String
+  points_spent  Int
+  created_at    DateTime? @default(now()) @db.DateTime(0)
+  updated_at    DateTime? @updatedAt @db.DateTime(0)
+  user          User      @relation(fields: [user_id], references: [id])
+
+  @@map("user_redemptions")
+}

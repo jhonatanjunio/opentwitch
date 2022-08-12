@@ -1,0 +1,7 @@
+{
+    "access_token": "",
+    "token_type": "Bearer",
+    "expires_in": 3600,
+    "refresh_token": "",
+    "scope": "user-modify-playback-state user-read-playback-state user-read-currently-playing"
+}
