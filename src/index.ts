@@ -34,7 +34,7 @@ app.get("/generate-tokens", (req, res) => {
 
 const twintegration = new TwIntegration();
 
-app.listen(port, async () => {
+app.listen(port,  () => {
     twintegration.connectChat();
     twintegration.pubSub();
     console.log(`🚀 Backend started and listening at: http://127.0.0.1:${port}`);    

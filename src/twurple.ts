@@ -117,7 +117,7 @@ export class TwIntegration {
 
         if (rewardId == process.env.TWITCH_REQUEST_SPOTIFY_REWARD_ID) {
 
-            await onSongRequest(profile.id, userName, message, "store").then(async (songRequest) => {
+            await onSongRequest(profile.id, userName, message, "store").then( (songRequest) => {
                 if (songRequest.errorMsg == "refuse_redemption") {
                     this.apiClient.channelPoints.updateRedemptionStatusByIds(channelId, rewardId, [id], "CANCELED");
                     this.sendChatMessage(songRequest.message);
@@ -152,7 +152,7 @@ export class TwIntegration {
     }
 
     // Function to send a message in the chat
-    async sendChatMessage(message: string) {
+     sendChatMessage(message: string) {
         if (this.isTest) {
             console.log(message);
             return;
