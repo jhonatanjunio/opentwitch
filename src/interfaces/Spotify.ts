@@ -16,7 +16,7 @@ const spotifyApi = new SpotifyWebApi({
 });
 
 //Function used to generate a random string with a length of n | Called when trying to generate a new code grant
-function rand(length: number, current: string = ""): string {
+function rand(length: number, current = ""): string {
     current = current ? current : '';
     return length ? rand(--length, "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz".charAt(Math.floor(Math.random() * 60)) + current) : current;
 }
@@ -84,7 +84,7 @@ async function getToken(): Promise<string> {
 }
 
 //Check the given Spotify URI and return the track ID
-function extractSpotifyUrl(url: string, onlyId: boolean = false): string {
+function extractSpotifyUrl(url: string, onlyId = false): string {
 
     //Biazzotto regex god♥
     const regex = /([A-Za-z0-9]{22})/
@@ -105,7 +105,7 @@ async function getMusicName(trackId: string): Promise<string> {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
     }
-    let musicData: string = "";
+    let musicData = "";
 
     await axios.get(url, { headers: headers })
         .then( (res: any) => {
