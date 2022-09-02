@@ -9,7 +9,7 @@ const prisma = new PrismaClient()
  * 
  * @returns {Promise<User>}
  */
-export async function getProfile(username: string, isSubscriber = "false"): Promise<User> {
+export async function getProfile(username: string, isSubscriber: string = "false"): Promise<User> {
 
     const findUserByUserName = await prisma.user.findMany({
         where: {

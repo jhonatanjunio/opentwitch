@@ -13,10 +13,10 @@ import { getProfile } from "./commands/getProfile";
 
 const prisma = new PrismaClient()
 
-export class TwIntegration {    
+export class TwIntegration {
     protected isTest?: boolean;
     protected chatClient: ChatClient
-    protected apiClient: ApiClient;    
+    protected apiClient: ApiClient;
 
     public constructor(isTest?: boolean) {
         this.isTest = isTest;
@@ -24,7 +24,7 @@ export class TwIntegration {
     async pubSub() {
         try {
             const clientId = process.env.TWITCH_CLIENT_ID as string;
-            const clientSecret = process.env.TWITCH_SECRET as string;          
+            const clientSecret = process.env.TWITCH_SECRET as string;
             const tokenData = JSON.parse(await fs.readFile("./src/jsons/twitch_main_tokens.json", "utf-8"));
 
             const authProvider = new RefreshingAuthProvider(
@@ -41,9 +41,9 @@ export class TwIntegration {
 
             await pubSubClient.onRedemption(userId, this.onRedemptionMessage.bind(this));
 
-            const apiClient = new ApiClient({authProvider: authProvider});
-            this.apiClient = apiClient;        
-            
+            const apiClient = new ApiClient({ authProvider: authProvider });
+            this.apiClient = apiClient;
+
         } catch (e) {
             console.error(e);
         }
@@ -117,7 +117,7 @@ export class TwIntegration {
 
         if (rewardId == process.env.TWITCH_REQUEST_SPOTIFY_REWARD_ID) {
 
-            await onSongRequest(profile.id, userName, message, "store").then( (songRequest) => {
+            await onSongRequest(profile.id, userName, message, "store").then((songRequest) => {
                 if (songRequest.errorMsg == "refuse_redemption") {
                     this.apiClient.channelPoints.updateRedemptionStatusByIds(channelId, rewardId, [id], "CANCELED");
                     this.sendChatMessage(songRequest.message);
@@ -152,7 +152,7 @@ export class TwIntegration {
     }
 
     // Function to send a message in the chat
-     sendChatMessage(message: string) {
+    sendChatMessage(message: string) {
         if (this.isTest) {
             console.log(message);
             return;

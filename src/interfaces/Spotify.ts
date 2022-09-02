@@ -44,7 +44,7 @@ async function refreshToken() {
 }
 
 //Code grant generator function | Called by a GET request
- function generateCodeGrant() {
+function generateCodeGrant() {
     let scopes = ['user-modify-playback-state', 'user-read-currently-playing', 'user-read-playback-state'],
         state = rand(16);
 
@@ -108,7 +108,7 @@ async function getMusicName(trackId: string): Promise<string> {
     let musicData = "";
 
     await axios.get(url, { headers: headers })
-        .then( (res: any) => {
+        .then((res: any) => {
             musicData = `${res.data.artists[0].name} - ${res.data.name}`;
         })
         .catch(async (err: any) => {
@@ -143,9 +143,9 @@ async function currentPlayingTrackId(): Promise<string> {
     }
 
     let currentPlayingTrackId = "";
-    
+
     await axios.get(url, { headers: headers })
-        .then( (res: any) => {
+        .then((res: any) => {
             currentPlayingTrackId = res.data && res.data.item ? res.data.item.id : "";
         })
         .catch(async (err: any) => {
@@ -194,7 +194,7 @@ async function searchTrack(userId: number, search: string) {
         let results: any = [];
 
         await axios.get(url, { headers: headers })
-            .then( (res: any) => {
+            .then((res: any) => {
                 foundResults = res.data.tracks.items;
             })
             .catch(async (err: any) => {
