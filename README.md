@@ -2,7 +2,7 @@
 
 ![Badge](https://img.shields.io/github/license/jhonatanjunio/opentwitch)
 
-## 🇧🇷 O que é a OpenTwitch?
+## :brazil: O que é a OpenTwitch?
 
 A OpenTwitch é uma aplicação NodeJS desenvolvida [ao vivo na twitch](https://twitch.tv/oninjadev) com o objetivo principal de fazer uma solução colaborativa para streamers da Twitch. Saiba mais sobre toda a estrutura pensada/desenvolvida na [nossa wiki](https://github.com/jhonatanjunio/opentwitch/wiki)
 

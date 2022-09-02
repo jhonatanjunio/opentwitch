@@ -1,7 +1,7 @@
 import { Command } from "commander";
 import { readdirSync } from "fs";
 
-async function main() {
+ function main() {
     const program = new Command();
     program.name("oNinjaBot - Twitch chat misc integrations").version("0.0.1").description("A Twitch chat misc integrations bot.");
     

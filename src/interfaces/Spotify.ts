@@ -16,7 +16,7 @@ const spotifyApi = new SpotifyWebApi({
 });
 
 //Function used to generate a random string with a length of n | Called when trying to generate a new code grant
-function rand(length: number, current: string = ""): string {
+function rand(length: number, current = ""): string {
     current = current ? current : '';
     return length ? rand(--length, "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz".charAt(Math.floor(Math.random() * 60)) + current) : current;
 }
@@ -44,7 +44,7 @@ async function refreshToken() {
 }
 
 //Code grant generator function | Called by a GET request
-async function generateCodeGrant() {
+function generateCodeGrant() {
     let scopes = ['user-modify-playback-state', 'user-read-currently-playing', 'user-read-playback-state'],
         state = rand(16);
 
@@ -84,7 +84,7 @@ async function getToken(): Promise<string> {
 }
 
 //Check the given Spotify URI and return the track ID
-function extractSpotifyUrl(url: string, onlyId: boolean = false): string {
+function extractSpotifyUrl(url: string, onlyId = false): string {
 
     //Biazzotto regex god♥
     const regex = /([A-Za-z0-9]{22})/
@@ -105,10 +105,10 @@ async function getMusicName(trackId: string): Promise<string> {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
     }
-    let musicData: string = "";
+    let musicData = "";
 
     await axios.get(url, { headers: headers })
-        .then(async (res: any) => {
+        .then((res: any) => {
             musicData = `${res.data.artists[0].name} - ${res.data.name}`;
         })
         .catch(async (err: any) => {
@@ -143,9 +143,9 @@ async function currentPlayingTrackId(): Promise<string> {
     }
 
     let currentPlayingTrackId = "";
-    
+
     await axios.get(url, { headers: headers })
-        .then(async (res: any) => {
+        .then((res: any) => {
             currentPlayingTrackId = res.data && res.data.item ? res.data.item.id : "";
         })
         .catch(async (err: any) => {
@@ -194,7 +194,7 @@ async function searchTrack(userId: number, search: string) {
         let results: any = [];
 
         await axios.get(url, { headers: headers })
-            .then(async (res: any) => {
+            .then((res: any) => {
                 foundResults = res.data.tracks.items;
             })
             .catch(async (err: any) => {
